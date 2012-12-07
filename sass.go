@@ -6,12 +6,12 @@
 package main
 
 // #cgo LDFLAGS: -lsass -lstdc++
-// #include "libsass/sass_interface.h"
-// typedef struct sass_options sass_options_t;
+// #include "libsass_wrapper.h"
 import "C"
 import "errors"
 import "fmt"
 import "log"
+
 
 type Sass struct {
 	/* context C.sass_context */
@@ -26,17 +26,17 @@ func NewSass() (sass *Sass, err error) {
 }
 
 func (c *Sass) Compile(source string) (string, error) {
-	context, err := C.sass_new_context()
+	context, err := C._sass_new_context()
 	if err != nil {
 		e := errors.New("failed to make context for compile:" + err.Error())
 		return "", e
 	}
-	defer C.sass_free_context(context)
+	defer C._sass_free_context(context)
 
 	/* context.options = c.options */
 	context.source_string = C.CString(source)
 
-	_, err = C.sass_compile(context)
+	_, err = C._sass_compile(context)
 	if err != nil {
 		e := errors.New("failed to compile:" + err.Error())
 		return "", e
