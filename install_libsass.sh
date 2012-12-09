@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git submodule update
+git submodule init && git submodule update
 pushd libsass
 make shared
 sudo make install-shared
