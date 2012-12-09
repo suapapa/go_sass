@@ -3,9 +3,10 @@
 !! Work in progress !!
 
 ## TODO
-* Add some test
+* Add more test
 * Add all interface of libsass into go-sass.
-* Make it to package, sass
 
 ## Done
+* Add some test
+* Make it to package, sass
 * cgo successed!
