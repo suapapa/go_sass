@@ -2,16 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-/* package sass */
-package main
+package sass
 
 // #cgo LDFLAGS: -lsass -lstdc++
 // #include "libsass_wrapper.h"
 import "C"
 import "errors"
 import "fmt"
-import "log"
-
 
 type Sass struct {
 	/* context C.sass_context */
@@ -48,11 +45,4 @@ func (c *Sass) Compile(source string) (string, error) {
 	}
 
 	return C.GoString(context.output_string), nil
-}
-
-func main() {
-	log.Println("TestCompile")
-	sass, _ := NewSass()
-	css, _ := sass.Compile("a { b { color: blue; } }")
-	log.Println(css)
 }
