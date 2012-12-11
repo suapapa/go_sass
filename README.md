@@ -1,12 +1,35 @@
-# go-sass: Go Binding for libsass
+# About sass
 
-!! Work in progress !!
+It's Go Binding for libsass.
 
-## TODO
-* Add more test
-* Add all interface of libsass into go-sass.
+- http://sass-lang.com/
+- https://github.com/hcatlin/libsass
 
-## Done
-* Add some test
-* Make it to package, sass
-* cgo successed!
+# Documentation
+
+## Prerequisites
+
+[Install Go][]
+
+## Installation
+
+    $ go get github.com/suapapa/go_sassl
+
+## General Documentation
+
+Use `go doc` to vew the documentation for hangul
+
+    go doc github.com/suapapa/go_sass
+
+Or alternatively, refer [go.pkgdoc.org](http://go.pkgdoc.org/github.com/suapapa/go_sass)
+
+# Author
+
+Homin Lee &lt;homin.lee@suapapa.net&gt;
+
+# Copyright & License
+
+Copyright (c) 2012, Homin Lee.
+All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file.
