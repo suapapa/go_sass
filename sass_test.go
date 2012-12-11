@@ -29,9 +29,8 @@ func TestCompileFileWithInclude(t *testing.T) {
 	fmt.Println(css, err)
 }
 
-
 func TestCompileFolder(t *testing.T) {
 	sc, _ := NewSass()
-	err := sc.CompileFolder("_scss")
+	err := sc.CompileFolder("_scss", "css")
 	fmt.Println(err)
 }
