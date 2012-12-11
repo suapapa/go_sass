@@ -5,10 +5,26 @@
 package sass
 
 import "fmt"
+import "log"
 import "testing"
 
 func TestBasicCompile(t *testing.T) {
+	log.Println("TestBasicCompile")
 	sc, _ := NewSass()
-	css, _ := sc.Compile("a { b { color: blue; } }")
-	fmt.Println(css)
+	css, err := sc.CompileToString("a { b { color: blue; } }")
+	fmt.Println(css, err)
+}
+
+func TestBasicFile(t *testing.T) {
+	log.Println("TestBasicFile")
+	sc, _ := NewSass()
+	css, err := sc.CompileFileToString("_scss/simple.scss")
+	fmt.Println(css, err)
+}
+
+func TestCompileFileWithInclude(t *testing.T) {
+	log.Println("TestCompileFileWithInclude")
+	sc, _ := NewSass()
+	css, err := sc.CompileFileToString("_scss/style.scss")
+	fmt.Println(css, err)
 }
