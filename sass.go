@@ -10,6 +10,8 @@ import "C"
 import "errors"
 import "fmt"
 import "log"
+import "os"
+import "path/filepath"
 
 type Sass struct {
 	options C.sass_options_t
@@ -85,4 +87,13 @@ func (c *Sass) CompileFileToString(path string) (string, error) {
 	}
 
 	return C.GoString(ctx.output_string), nil
+}
+
+func (c *Sass) CompileFolder(srcPath, outPath string) error {
+	walkF := func (path string, f os.FileInfo, err error) error {
+		log.Printf("Visited: %s\n", path)
+		return nil
+	}
+	err := filepath.Walk(srcPath, walkF)
+	return err
 }

@@ -28,3 +28,10 @@ func TestCompileFileWithInclude(t *testing.T) {
 	css, err := sc.CompileFileToString("_scss/style.scss")
 	fmt.Println(css, err)
 }
+
+
+func TestCompileFolder(t *testing.T) {
+	sc, _ := NewSass()
+	err := sc.CompileFolder("_scss")
+	fmt.Println(err)
+}
