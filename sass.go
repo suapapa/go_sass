@@ -17,14 +17,10 @@ import "path/filepath"
 import "strings"
 
 type Sass struct {
-	options C.sass_options_t
-}
-
-// Made new Sass compiler.
-func NewSass() (sass *Sass, err error) {
-	sass = new(Sass)
-	err = nil
-	return
+	OutputStyle    int
+	SourceComments bool
+	IncludePaths   string
+	ImagePath      string
 }
 
 // Compile scss to css
@@ -36,8 +32,7 @@ func (c *Sass) Compile(source string) (string, error) {
 	}
 	defer C._sass_free_context(ctx)
 
-	// TODO: assign options!
-	// ctx.options = c.options
+	c.fillOptions((*C.sass_options_t)(&ctx.options))
 	ctx.source_string = C.CString(source)
 
 	_, err = C._sass_compile(ctx)
@@ -64,7 +59,7 @@ func (c *Sass) CompileFile(path string) (string, error) {
 	}
 	defer C._sass_free_file_context(ctx)
 
-	/* ctx.options = c.options */
+	c.fillOptions((*C.sass_options_t)(&ctx.options))
 	ctx.input_path = C.CString(path)
 
 	C._sass_compile_file(ctx)
@@ -97,8 +92,6 @@ func (c *Sass) CompileFolder(srcPath, outPath string) error {
 			return nil
 		}
 
-		base = strings.TrimRight(base, ".scss") + ".css"
-
 		dir := filepath.Dir(p)
 		outDir := strings.Replace(dir, srcPath, outPath, 1)
 		err := os.MkdirAll(outDir, 0770)
@@ -106,7 +99,7 @@ func (c *Sass) CompileFolder(srcPath, outPath string) error {
 			return err
 		}
 
-		/* ctx.options = c.options */
+		c.fillOptions((*C.sass_options_t)(&ctx.options))
 		ctx.input_path = C.CString(p)
 		C._sass_compile_file(ctx)
 		if ctx.error_status != 0 {
@@ -115,6 +108,7 @@ func (c *Sass) CompileFolder(srcPath, outPath string) error {
 			return errors.New(errStr)
 		}
 
+		base = strings.TrimRight(base, ".scss") + ".css"
 		outPath := filepath.Join(outDir, base)
 		wp, err := os.Create(outPath)
 		if err != nil {
@@ -127,11 +121,22 @@ func (c *Sass) CompileFolder(srcPath, outPath string) error {
 			return err
 		}
 		if n == 0 {
-			return errors.New("Nothing written to " + p)
+			return errors.New("nothing written to " + p)
 		}
 
 		return nil
 	}
 
 	return filepath.Walk(srcPath, walkF)
+}
+
+func (c *Sass) fillOptions(o *C.sass_options_t) {
+	o.output_style = C.int(c.OutputStyle)
+	if c.SourceComments {
+		o.source_comments = 1
+	} else {
+		o.source_comments = 0
+	}
+	o.include_paths = C.CString(c.IncludePaths)
+	o.image_path = C.CString(c.ImagePath)
 }

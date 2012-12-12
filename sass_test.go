@@ -10,27 +10,28 @@ import "testing"
 
 func TestBasicCompile(t *testing.T) {
 	log.Println("TestBasicCompile")
-	sc, _ := NewSass()
+	var sc Sass
 	css, err := sc.Compile("a { b { color: blue; } }")
 	fmt.Println(css, err)
 }
 
 func TestBasicFile(t *testing.T) {
 	log.Println("TestBasicFile")
-	sc, _ := NewSass()
+	var sc Sass
+	sc.SourceComments = true
 	css, err := sc.CompileFile("_scss/simple.scss")
 	fmt.Println(css, err)
 }
 
 func TestCompileFileWithInclude(t *testing.T) {
 	log.Println("TestCompileFileWithInclude")
-	sc, _ := NewSass()
+	var sc Sass
 	css, err := sc.CompileFile("_scss/style.scss")
 	fmt.Println(css, err)
 }
 
 func TestCompileFolder(t *testing.T) {
-	sc, _ := NewSass()
+	var sc Sass
 	err := sc.CompileFolder("_scss", "css")
 	fmt.Println(err)
 }
