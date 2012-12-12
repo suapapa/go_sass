@@ -19,9 +19,17 @@ import "strings"
 type Compiler struct {
 	OutputStyle    int
 	SourceComments bool
-	IncludePaths   string
+	IncludePaths   []string
 	ImagePath      string
 }
+
+const (
+	STYLE_NESTED     int = C.SASS_STYLE_NESTED
+	STYLE_EXPANDED   int = C.SASS_STYLE_EXPANDED
+	STYLE_COMPACT    int = C.SASS_STYLE_COMPACT
+	STYLE_COMPRESSED int = C.SASS_STYLE_COMPRESSED
+	STYLE_MAX        int = C.SASS_STYLE_COMPRESSED + 1
+)
 
 // Compile scss to css
 func (c *Compiler) Compile(source string) (string, error) {
@@ -32,7 +40,11 @@ func (c *Compiler) Compile(source string) (string, error) {
 	}
 	defer C._sass_free_context(ctx)
 
-	c.fillOptions((*C.sass_options_t)(&ctx.options))
+	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
+	if err != nil {
+		return "", err
+	}
+
 	ctx.source_string = C.CString(source)
 
 	_, err = C._sass_compile(ctx)
@@ -59,7 +71,11 @@ func (c *Compiler) CompileFile(path string) (string, error) {
 	}
 	defer C._sass_free_file_context(ctx)
 
-	c.fillOptions((*C.sass_options_t)(&ctx.options))
+	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
+	if err != nil {
+		return "", err
+	}
+
 	ctx.input_path = C.CString(path)
 
 	C._sass_compile_file(ctx)
@@ -80,6 +96,11 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 		return errors.New(errStr)
 	}
 	defer C._sass_free_file_context(ctx)
+
+	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
+	if err != nil {
+		return err
+	}
 
 	walkF := func(p string, f os.FileInfo, e error) error {
 		if f.IsDir() {
@@ -103,7 +124,6 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 			return err
 		}
 
-		c.fillOptions((*C.sass_options_t)(&ctx.options))
 		ctx.input_path = C.CString(p)
 		C._sass_compile_file(ctx)
 		if ctx.error_status != 0 {
@@ -134,13 +154,26 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 	return filepath.Walk(srcPath, walkF)
 }
 
-func (c *Compiler) fillOptions(o *C.sass_options_t) {
+func (c *Compiler) fillOptions(o *C.sass_options_t) error {
+	// output_style
+	if 0 > c.OutputStyle || c.OutputStyle >= STYLE_MAX {
+		errStr := fmt.Sprintf("invaild style, %d given", c.OutputStyle)
+		return errors.New(errStr)
+	}
 	o.output_style = C.int(c.OutputStyle)
+
+	// source_comments
 	if c.SourceComments {
 		o.source_comments = 1
 	} else {
 		o.source_comments = 0
 	}
-	o.include_paths = C.CString(c.IncludePaths)
+
+	// include_paths
+	o.include_paths = C.CString(strings.Join(c.IncludePaths, ":"))
+
+	// image_path
 	o.image_path = C.CString(c.ImagePath)
+
+	return nil
 }
