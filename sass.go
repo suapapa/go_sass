@@ -82,6 +82,10 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 	defer C._sass_free_file_context(ctx)
 
 	walkF := func(p string, f os.FileInfo, e error) error {
+		if f.IsDir() {
+			return nil
+		}
+
 		if !strings.HasSuffix(p, ".scss") {
 			return nil
 		}
