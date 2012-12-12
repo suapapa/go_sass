@@ -39,7 +39,7 @@ Compile Sass folder into CSS:
     )
 
     func main() {
-            sc, _ := sass.NewSass()
+            var sc sass.Compiler
             sc.CompileFolder("_scss", "css")
     }
 

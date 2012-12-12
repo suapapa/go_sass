@@ -16,7 +16,7 @@ import "os"
 import "path/filepath"
 import "strings"
 
-type Sass struct {
+type Compiler struct {
 	OutputStyle    int
 	SourceComments bool
 	IncludePaths   string
@@ -24,7 +24,7 @@ type Sass struct {
 }
 
 // Compile scss to css
-func (c *Sass) Compile(source string) (string, error) {
+func (c *Compiler) Compile(source string) (string, error) {
 	ctx, err := C._sass_new_context()
 	if err != nil {
 		errStr := "failed to alloc ctx: " + err.Error()
@@ -51,7 +51,7 @@ func (c *Sass) Compile(source string) (string, error) {
 }
 
 // Compile scss file to css
-func (c *Sass) CompileFile(path string) (string, error) {
+func (c *Compiler) CompileFile(path string) (string, error) {
 	ctx, err := C._sass_new_file_context()
 	if err != nil {
 		errStr := "failed to alloc file ctx: " + err.Error()
@@ -73,7 +73,7 @@ func (c *Sass) CompileFile(path string) (string, error) {
 }
 
 // Compile Sass files in in srcPath to CSS in outPath
-func (c *Sass) CompileFolder(srcPath, outPath string) error {
+func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 	ctx, err := C._sass_new_file_context()
 	if err != nil {
 		errStr := "failed to alloc file ctx: " + err.Error()
@@ -130,7 +130,7 @@ func (c *Sass) CompileFolder(srcPath, outPath string) error {
 	return filepath.Walk(srcPath, walkF)
 }
 
-func (c *Sass) fillOptions(o *C.sass_options_t) {
+func (c *Compiler) fillOptions(o *C.sass_options_t) {
 	o.output_style = C.int(c.OutputStyle)
 	if c.SourceComments {
 		o.source_comments = 1
