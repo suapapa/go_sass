@@ -46,11 +46,7 @@ func (c *Compiler) Compile(source string) (string, error) {
 
 	ctx.source_string = C.CString(source)
 
-	if _, err := C._sass_compile(ctx); err != nil {
-		errStr := "failed to compile: " + err.Error()
-		return "", errors.New(errStr)
-	}
-
+	C._sass_compile(ctx)
 	if ctx.error_status != 0 {
 		errStr := fmt.Sprintf("failed to compile: %d: %s",
 			ctx.error_status, C.GoString(ctx.error_message))
