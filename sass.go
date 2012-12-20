@@ -17,18 +17,18 @@ import "path/filepath"
 import "strings"
 
 type Compiler struct {
-	OutputStyle    int
+	OutputStyle    uint
 	SourceComments bool
 	IncludePaths   []string
 	ImagePath      string
 }
 
 const (
-	STYLE_NESTED     int = C.SASS_STYLE_NESTED
-	STYLE_EXPANDED   int = C.SASS_STYLE_EXPANDED
-	STYLE_COMPACT    int = C.SASS_STYLE_COMPACT
-	STYLE_COMPRESSED int = C.SASS_STYLE_COMPRESSED
-	STYLE_MAX        int = C.SASS_STYLE_COMPRESSED + 1
+	STYLE_NESTED     uint = C.SASS_STYLE_NESTED
+	STYLE_EXPANDED   uint = C.SASS_STYLE_EXPANDED
+	STYLE_COMPACT    uint = C.SASS_STYLE_COMPACT
+	STYLE_COMPRESSED uint = C.SASS_STYLE_COMPRESSED
+	STYLE_MAX        uint = C.SASS_STYLE_COMPRESSED + 1
 )
 
 // Compile scss to css
@@ -156,7 +156,7 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 
 func (c *Compiler) fillOptions(o *C.sass_options_t) error {
 	// output_style
-	if 0 > c.OutputStyle || c.OutputStyle >= STYLE_MAX {
+	if c.OutputStyle >= STYLE_MAX {
 		errStr := fmt.Sprintf("invaild style, %d given", c.OutputStyle)
 		return errors.New(errStr)
 	}
