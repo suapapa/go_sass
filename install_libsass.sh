@@ -5,3 +5,4 @@ pushd libsass
 make shared
 sudo make install-shared
 sudo ldconfig
+popd
