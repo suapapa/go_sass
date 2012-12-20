@@ -40,15 +40,13 @@ func (c *Compiler) Compile(source string) (string, error) {
 	}
 	defer C._sass_free_context(ctx)
 
-	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
-	if err != nil {
+	if err := c.fillOptions((*C.sass_options_t)(&ctx.options)); err != nil {
 		return "", err
 	}
 
 	ctx.source_string = C.CString(source)
 
-	_, err = C._sass_compile(ctx)
-	if err != nil {
+	if _, err := C._sass_compile(ctx); err != nil {
 		errStr := "failed to compile: " + err.Error()
 		return "", errors.New(errStr)
 	}
@@ -71,8 +69,7 @@ func (c *Compiler) CompileFile(path string) (string, error) {
 	}
 	defer C._sass_free_file_context(ctx)
 
-	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
-	if err != nil {
+	if err := c.fillOptions((*C.sass_options_t)(&ctx.options)); err != nil {
 		return "", err
 	}
 
@@ -97,8 +94,7 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 	}
 	defer C._sass_free_file_context(ctx)
 
-	err = c.fillOptions((*C.sass_options_t)(&ctx.options))
-	if err != nil {
+	if err := c.fillOptions((*C.sass_options_t)(&ctx.options)); err != nil {
 		return err
 	}
 
@@ -119,8 +115,7 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 
 		dir := filepath.Dir(p)
 		outDir := strings.Replace(dir, srcPath, outPath, 1)
-		err := os.MkdirAll(outDir, 0770)
-		if err != nil {
+		if err := os.MkdirAll(outDir, 0770); err != nil {
 			return err
 		}
 
