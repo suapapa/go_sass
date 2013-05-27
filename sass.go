@@ -110,7 +110,7 @@ func (c *Compiler) CompileFolder(srcPath, outPath string) error {
 		}
 
 		dir := filepath.Dir(p)
-		outDir := strings.Replace(dir, srcPath, outPath, 1)
+		outDir := strings.Replace(filepath.ToSlash(dir), filepath.ToSlash(srcPath), filepath.ToSlash(outPath), 1)
 		if err := os.MkdirAll(outDir, 0770); err != nil {
 			return err
 		}
