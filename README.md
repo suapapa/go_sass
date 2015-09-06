@@ -1,10 +1,10 @@
-# About sass
-
 Before start, there is another good Sass compilers written in !!PURE!! Go.
 Star them not here:
 
 * [c9s/c6](https://github.com/c9s/c6)
 * [yosssi/gcss](https://github.com/yosssi/gcss)
+
+# About sass
 
 It's Go binding for [libsass][4] which written in cpp by [hcailin][5].
 It compile [Sass][3] file (.scss) to CSS.
