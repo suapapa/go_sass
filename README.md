@@ -1,8 +1,13 @@
 Before start, there is another good Sass compilers written in !!PURE!! Go.
 Star them not here:
 
-* [c9s/c6](https://github.com/c9s/c6)
-* [yosssi/gcss](https://github.com/yosssi/gcss)
+* [github.com/c9s/c6](https://github.com/c9s/c6)
+* [github.com/yosssi/gcss](https://github.com/yosssi/gcss)
+
+Or you can go to another up to date libsass binding projct:
+
+* [github.com/wellington/go-libsass](https://github.com/wellington/go-libsass)
+
 
 # About sass
 
